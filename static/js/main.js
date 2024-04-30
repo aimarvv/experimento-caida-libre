@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var densidadAire = 1.2; // Densidad del aire (kg/m^3)
     var coeficienteArrastrePluma = 0.47; // Coeficiente de arrastre para la pluma
     var coeficienteArrastreMartillo = 0.42; // Coeficiente de arrastre para el martillo
-    var masaPluma = 0.001; // Masa de la pluma (kg)
+    var masaPluma = 0.0005; // Masa de la pluma (kg)
     var masaMartillo = 0.1; // Masa del martillo (kg)
     var areaFrontalPluma = 0.005; // Área frontal de la pluma (m^2)
     var areaFrontalMartillo = 0.01; // Área frontal del martillo (m^2)
@@ -44,25 +44,25 @@ document.addEventListener("DOMContentLoaded", function() {
         var velocidadTerminal = Math.sqrt((2 * fuerzaGravedad) / (densidadAire * coeficienteArrastre * areaFrontal)); // Velocidad terminal
         return velocidadTerminal * (1 - Math.exp((-coeficienteArrastre * densidadAire * areaFrontal * tiempo) / masa)); // Velocidad de caída con resistencia del aire
     }
-    
-    // Posición inicial de la pluma y el martillo
-    var plumaY = 0;
-    var martilloY = 0;
-    var tiempo = 0; // Tiempo transcurrido
+
     
     // Función para dibujar la simulación
-    function drawSimulation(conAire) {
+    function drawSimulation(conAire, plumaY, martilloY, tiempo) {
         // Limpiar el canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         // Calcular la velocidad de caída de la pluma y el martillo
-        var velocidadPluma = conAire ? calcularVelocidadConAire(masaPluma, coeficienteArrastrePluma, areaFrontalPluma, tiempo) : Math.sqrt(2 * g * plumaY);
-        var velocidadMartillo = conAire ? calcularVelocidadConAire(masaMartillo, coeficienteArrastreMartillo, areaFrontalMartillo, tiempo) : Math.sqrt(2 * g * martilloY);
+        var velocidadPluma = conAire ? calcularVelocidadConAire(masaPluma, coeficienteArrastrePluma, areaFrontalPluma, tiempo) : (Math.sqrt(2 * g * plumaY) / 2);
+        var velocidadMartillo = conAire ? calcularVelocidadConAire(masaMartillo, coeficienteArrastreMartillo, areaFrontalMartillo, tiempo) : (Math.sqrt(2 * g * martilloY) / 2);
         
         // Dibujar la pluma y el martillo
         ctx.drawImage(plumaImg, 100, plumaY, plumaImg.width, plumaImg.height);
         ctx.drawImage(martilloImg, 200, martilloY, martilloImg.width, martilloImg.height);
         
+        // Mostrar un mensaje de alerta con los valores de velocidad
+        //alert("Velocidad de la pluma: " + velocidadPluma + " m/s\nVelocidad del martillo: " + velocidadMartillo + " m/s");
+
+
         // Actualizar las posiciones de la pluma y el martillo
         plumaY += velocidadPluma * 0.05; // Incrementar la posición Y de la pluma
         martilloY += velocidadMartillo * 0.05; // Incrementar la posición Y del martillo
@@ -71,16 +71,11 @@ document.addEventListener("DOMContentLoaded", function() {
         tiempo += 0.05;
         
         // Solicitar la próxima animación
-        requestAnimationFrame(drawSimulation.bind(null, conAire));
+        requestAnimationFrame(drawSimulation.bind(null, conAire, plumaY, martilloY, tiempo));
     }
     
     // Evento de clic en el botón "Comenzar Experimento"
     document.getElementById("startExperiment").addEventListener("click", function() {
-        // Reiniciar las posiciones de la pluma y el martillo
-        plumaY = 0;
-        martilloY = 0;
-        tiempo = 0;
-        
         // Determinar si se debe simular con aire o sin aire
         var conAire = document.getElementById("conAire").checked;
         
@@ -89,13 +84,13 @@ document.addEventListener("DOMContentLoaded", function() {
             plumaImg = imagenes[0];
             martilloImg = imagenes[1];
             // Iniciar la simulación
-            drawSimulation(conAire);
+            drawSimulation(conAire, 0.1, 0.1, 0);
         });
     });
 
-        // Función para abrir la ventana emergente con la descripción del proyecto
-        document.getElementById('openDescription').addEventListener('click', function() {
-            // Abre una nueva ventana con la descripción del proyecto
-            window.open('about.html', '_blank', 'width=600,height=600');
-        });
+    // Función para abrir la ventana emergente con la descripción del proyecto
+    document.getElementById('openDescription').addEventListener('click', function() {
+        // Abre una nueva ventana con la descripción del proyecto
+        window.open('about.html', '_blank', 'width=600,height=600');
+    });
 });
