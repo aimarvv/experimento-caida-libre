@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var coeficienteArrastrePluma = 0.47; // Coeficiente de arrastre para la pluma
     var coeficienteArrastreMartillo = 0.42; // Coeficiente de arrastre para el martillo
     var masaPluma = 0.0005; // Masa de la pluma (kg)
-    var masaMartillo = 0.1; // Masa del martillo (kg)
+    var masaMartillo = 0.350; // Masa del martillo (kg)
     var areaFrontalPluma = 0.005; // Área frontal de la pluma (m^2)
     var areaFrontalMartillo = 0.01; // Área frontal del martillo (m^2)
     
